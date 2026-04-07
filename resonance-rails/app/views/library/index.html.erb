@@ -1,0 +1,116 @@
+<div class="max-w-6xl mx-auto px-8 py-12">
+  <div class="flex items-end justify-between mb-12">
+    <div>
+      <h1 class="text-4xl font-display font-black text-white tracking-tighter mb-2">Your Library</h1>
+      <p class="text-slate-500 font-medium tracking-tight">Your personal sound collection</p>
+    </div>
+    <%= link_to new_playlist_path, class: "btn-primary flex items-center gap-2 py-3 px-6 text-xs" do %>
+      <i data-lucide="plus" class="w-4 h-4"></i> Create Playlist
+    <% end %>
+  </div>
+
+  <div class="space-y-16">
+    <!-- Playlists Section -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center">
+          <i data-lucide="list-music" class="w-5 h-5 text-brand-primary"></i>
+        </div>
+        <h2 class="text-2xl font-display font-black text-white tracking-tight">Playlists</h2>
+      </div>
+
+      <% if @playlists.any? %>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <% @playlists.each do |playlist| %>
+            <%= link_to playlist_path(playlist), class: "group p-4 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all duration-500" do %>
+              <div class="aspect-square rounded-2xl bg-white/5 mb-4 overflow-hidden relative shadow-lg">
+                <% if playlist.image_url.present? %>
+                  <img src="<%= playlist.image_url %>" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+                <% else %>
+                  <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-secondary/20 to-brand-accent/20">
+                    <i data-lucide="music-2" class="w-12 h-12 text-white/20"></i>
+                  </div>
+                <% end %>
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div class="w-12 h-12 bg-white text-bg-deep rounded-full shadow-2xl flex items-center justify-center translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                    <i data-lucide="play" class="w-6 h-6 fill-current ml-0.5"></i>
+                  </div>
+                </div>
+              </div>
+              <h3 class="text-sm font-bold text-white truncate"><%= playlist.title %></h3>
+              <p class="text-[11px] font-medium text-slate-500 truncate"><%= pluralize(playlist.tracks.count, 'track') %></p>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="p-12 rounded-[2.5rem] bg-white/[0.01] border border-dashed border-white/10 text-center">
+          <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="plus" class="w-8 h-8 text-slate-700"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Create your first playlist</h3>
+          <p class="text-slate-500 text-sm mb-8 max-w-xs mx-auto">Build your own sound collection and sync it across all your devices.</p>
+          <%= link_to "Get Started", new_playlist_path, class: "btn-outline py-2.5 px-8 text-[11px] font-black uppercase tracking-widest" %>
+        </div>
+      <% end %>
+    </section>
+
+    <!-- Liked Songs -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-2xl bg-brand-accent/10 flex items-center justify-center text-brand-accent">
+          <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
+        </div>
+        <h2 class="text-2xl font-display font-black text-white tracking-tight">Liked Songs</h2>
+        <span class="text-[11px] font-black text-slate-600 uppercase tracking-widest"><%= @liked_tracks.count %> tracks</span>
+      </div>
+
+      <% if @liked_tracks.any? %>
+        <div class="flex flex-col gap-1">
+          <% @liked_tracks.each_with_index do |track, i| %>
+            <div class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/[0.04] group transition-all">
+              <span class="text-[12px] font-bold text-slate-700 w-5 text-center flex-shrink-0 group-hover:hidden"><%= i + 1 %></span>
+              <div class="hidden group-hover:flex w-5 justify-center cursor-pointer"
+                   onclick="document.dispatchEvent(new CustomEvent('player:playRow', { detail: { trackId: <%= track.id %>, contextType: 'liked_songs' } }))">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play text-brand-primary"><path d="m5 3 14 9-14 9V3z"/></svg>
+              </div>
+              <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white/5 border border-white/5">
+                <% if track.album.cover_url.present? %>
+                  <img src="<%= track.album.cover_url %>" class="w-full h-full object-cover">
+                <% end %>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[13px] font-semibold text-white truncate"><%= track.title %></p>
+                <p class="text-[11px] text-slate-500 truncate">
+                  <%= link_to track.artist.name, artist_path(track.artist), class: "hover:text-brand-primary transition-colors" %>
+                </p>
+              </div>
+              <div class="flex items-center gap-3">
+                <button class="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-brand-primary hover:bg-brand-primary/10 transition-all opacity-0 group-hover:opacity-100"
+                        onclick="document.dispatchEvent(new CustomEvent('player:addToQueue', { detail: { trackId: <%= track.id %>, title: '<%= escape_javascript track.title %>', artist: '<%= escape_javascript track.artist.name %>', cover: '<%= track.album.cover_url %>', preview: '<%= track.preview_url %>' } }))"
+                        title="Add to Queue">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-plus"><path d="M11 12H3"/><path d="M16 6H3"/><path d="M16 18H3"/><path d="M18 9v6"/><path d="M15 12h6"/></svg>
+                </button>
+                <%= render "shared/like_button", track: track %>
+                <%= render "shared/add_to_playlist", track: track %>
+                <% if track.duration_seconds %>
+                  <% mins = track.duration_seconds / 60; secs = track.duration_seconds % 60 %>
+                  <span class="text-[12px] text-slate-600 tabular-nums w-10 text-right"><%= "#{mins}:#{'%02d' % secs}" %></span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="flex items-center gap-6 p-8 rounded-[2.5rem] bg-gradient-to-r from-brand-accent/10 to-transparent border border-white/5">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-secondary to-brand-accent flex items-center justify-center shadow-lg shadow-brand-secondary/20">
+            <i data-lucide="heart" class="w-8 h-8 text-white fill-current"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-1">No liked songs yet</h3>
+            <p class="text-xs font-medium text-slate-500">Hit the ♥ on any track to save it here.</p>
+          </div>
+        </div>
+      <% end %>
+    </section>
+  </div>
+</div>

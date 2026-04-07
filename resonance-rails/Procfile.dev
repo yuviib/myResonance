@@ -1,0 +1,4 @@
+web: bin/rails server
+css: bin/rails tailwindcss:watch
+jobs: bin/jobs
+ml: cd ../resonance-ml && uv run uvicorn app.main:app --port 8000 --reload

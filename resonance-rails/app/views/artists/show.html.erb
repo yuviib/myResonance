@@ -1,0 +1,93 @@
+<div class="max-w-6xl mx-auto px-8 py-12">
+  <!-- Artist Hero -->
+  <div class="relative rounded-[3rem] overflow-hidden bg-bg-surface border border-white/5 mb-16 min-h-[400px] flex items-end">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0 z-0">
+      <img src="<%= @artist.image_url || "https://picsum.photos/seed/#{@artist.id}/1200/600" %>" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-t from-bg-deep via-bg-deep/60 to-transparent"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 p-12 w-full">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="px-3 py-1 rounded-full bg-brand-primary/20 border border-brand-primary/30 text-brand-primary text-[10px] font-black uppercase tracking-widest">Verified Artist</span>
+      </div>
+      <h1 class="text-7xl font-display font-black text-white tracking-tighter mb-6"><%= @artist.name %></h1>
+      <div class="flex items-center gap-6">
+        <div class="flex flex-col">
+          <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Monthly Listeners</span>
+          <span class="text-xl font-bold text-white tabular-nums"><%= number_with_delimiter(1_000_000 + (@artist.id * 123456) % 5000000) %></span>
+        </div>
+        <div class="w-px h-10 bg-white/10"></div>
+        <div class="flex flex-col">
+          <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Tracks</span>
+          <span class="text-xl font-bold text-white tabular-nums"><%= @artist.tracks.count %></span>
+        </div>
+        <div class="w-px h-10 bg-white/10"></div>
+        <div class="flex flex-col">
+          <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Albums</span>
+          <span class="text-xl font-bold text-white tabular-nums"><%= @artist.albums.count %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+    <!-- Left Column: Tracks -->
+    <div class="lg:col-gap-2 lg:col-span-2">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-display font-black text-white tracking-tight">Popular Tracks</h2>
+        <button class="text-[11px] font-black text-brand-primary uppercase tracking-widest hover:text-white transition-colors">Play All</button>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <% @tracks.each_with_index do |track, i| %>
+          <div class="group flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/[0.04] transition-all">
+            <span class="text-[12px] font-bold text-slate-700 w-5 text-center flex-shrink-0 group-hover:hidden"><%= i + 1 %></span>
+            <div class="hidden group-hover:flex w-5 justify-center cursor-pointer"
+                 onclick="document.dispatchEvent(new CustomEvent('player:playRow', { detail: { trackId: <%= track.id %>, contextType: 'artist', contextId: <%= @artist.id %> } }))">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play text-brand-primary"><path d="m5 3 14 9-14 9V3z"/></svg>
+            </div>
+            <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white/5 border border-white/5">
+              <img src="<%= track.album.cover_url %>" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[13px] font-bold text-white truncate group-hover:text-brand-primary transition-colors"><%= track.title %></p>
+              <p class="text-[11px] text-slate-500 truncate"><%= track.album.title %></p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button class="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-brand-primary hover:bg-brand-primary/10 transition-all opacity-0 group-hover:opacity-100"
+                      onclick="document.dispatchEvent(new CustomEvent('player:addToQueue', { detail: { trackId: <%= track.id %>, title: '<%= escape_javascript track.title %>', artist: '<%= escape_javascript @artist.name %>', cover: '<%= track.album.cover_url %>', preview: '<%= track.preview_url %>' } }))"
+                      title="Add to Queue">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-plus"><path d="M11 12H3"/><path d="M16 6H3"/><path d="M16 18H3"/><path d="M18 9v6"/><path d="M15 12h6"/></svg>
+              </button>
+              <%= render "shared/like_button", track: track %>
+              <%= render "shared/add_to_playlist", track: track %>
+              <% mins = track.duration_seconds.to_i / 60; secs = track.duration_seconds.to_i % 60 %>
+              <span class="text-[12px] text-slate-600 tabular-nums w-10 text-right"><%= "#{mins}:#{'%02d' % secs}" %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Right Column: Albums -->
+    <div>
+      <h2 class="text-2xl font-display font-black text-white tracking-tight mb-8">Discography</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <% @albums.each do |album| %>
+          <%= link_to album_path(album), class: "group block" do %>
+            <div class="aspect-square rounded-2xl overflow-hidden mb-3 border border-white/5 group-hover:border-brand-primary/30 transition-all duration-500 relative">
+              <img src="<%= album.cover_url %>" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <i data-lucide="play" class="w-8 h-8 text-white fill-current"></i>
+              </div>
+            </div>
+            <p class="text-[13px] font-bold text-white truncate group-hover:text-brand-primary transition-colors"><%= album.title %></p>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider"><%= album.release_year %></p>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

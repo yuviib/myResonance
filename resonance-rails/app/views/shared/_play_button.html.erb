@@ -1,0 +1,10 @@
+<%# Usage: render "shared/play_button", track: track, size: "lg" %>
+<% size = local_assigns[:size] || "md" %>
+<% btn_class = size == "lg" ? "w-14 h-14" : "w-11 h-11" %>
+<% icon_class = size == "lg" ? "w-7 h-7" : "w-5 h-5" %>
+<button
+  class="<%= btn_class %> rounded-full bg-brand-primary text-bg-deep flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-brand-primary/20"
+  onclick="document.dispatchEvent(new CustomEvent('player:playRow', { detail: { trackId: <%= track.id %> } }))"
+>
+  <i data-lucide="play" class="<%= icon_class %> fill-current ml-0.5"></i>
+</button>

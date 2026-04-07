@@ -1,0 +1,73 @@
+<div class="max-w-4xl mx-auto px-8 py-12">
+  <div class="mb-12">
+    <h1 class="text-4xl font-display font-black text-white tracking-tighter mb-2">My Profile</h1>
+    <p class="text-slate-500 font-medium tracking-tight">Manage your account and preferences</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- User Card -->
+    <div class="lg:col-span-1">
+      <div class="p-8 rounded-[2.5rem] bg-white/[0.03] border border-white/5 backdrop-blur-3xl text-center relative overflow-hidden group">
+        <!-- Glow effect -->
+        <div class="absolute -top-12 -right-12 w-32 h-32 bg-brand-secondary/10 blur-[80px] rounded-full group-hover:bg-brand-secondary/20 transition-all duration-700"></div>
+        
+        <div class="relative z-10">
+          <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-tr from-brand-secondary to-brand-accent p-[3px] mb-6 shadow-[0_0_40px_rgba(188,0,255,0.15)] group-hover:shadow-[0_0_50px_rgba(188,0,255,0.25)] transition-all duration-500">
+            <div class="w-full h-full rounded-full bg-bg-deep flex items-center justify-center text-4xl font-black text-white">
+              <%= @user.email[0..1].upcase %>
+            </div>
+          </div>
+          
+          <h2 class="text-xl font-bold text-white mb-1"><%= @user.email.split('@').first.capitalize %></h2>
+          <p class="text-xs font-black text-brand-primary uppercase tracking-[0.2em] mb-8">Pro Subscriber</p>
+          
+          <div class="space-y-3">
+            <%= link_to "Edit Profile", edit_profile_path, class: "btn-primary w-full py-3 text-xs" %>
+            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "w-full py-3 text-xs font-bold text-slate-500 hover:text-brand-accent transition-all" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats & Account Info -->
+    <div class="lg:col-span-2 space-y-8">
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="p-6 rounded-3xl bg-white/[0.02] border border-white/5">
+          <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-1">Playlists</p>
+          <p class="text-2xl font-display font-black text-white"><%= @user.playlists.count %></p>
+        </div>
+        <div class="p-6 rounded-3xl bg-white/[0.02] border border-white/5">
+          <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-1">Followers</p>
+          <p class="text-2xl font-display font-black text-white">0</p>
+        </div>
+      </div>
+
+      <!-- Account Settings Card -->
+      <div class="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5">
+        <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <i data-lucide="shield-check" class="w-5 h-5 text-brand-primary"></i>
+          Account Security
+        </h3>
+        
+        <div class="space-y-6">
+          <div class="flex items-center justify-between pb-6 border-b border-white/5">
+            <div>
+              <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-1">Email Address</p>
+              <p class="text-sm font-medium text-slate-300"><%= @user.email %></p>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-[10px] font-black uppercase tracking-wider">Verified</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-1">Password</p>
+              <p class="text-sm font-medium text-slate-300">••••••••••••</p>
+            </div>
+            <%= link_to "Change", edit_user_registration_path, class: "text-xs font-bold text-brand-primary hover:underline" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

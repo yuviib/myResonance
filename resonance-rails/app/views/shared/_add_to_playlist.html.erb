@@ -1,0 +1,47 @@
+<%= turbo_frame_tag dom_id(track, :add_to_playlist) do %>
+  <div class="relative group/menu" data-controller="dropdown">
+    <!-- Trigger button -->
+    <button
+      class="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-brand-primary hover:bg-brand-primary/10 hover:border-brand-primary/30 transition-all"
+      onclick="this.nextElementSibling.classList.toggle('hidden')"
+      data-action="click->player#stopProp"
+      title="Add to playlist"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+    </button>
+
+    <!-- Dropdown -->
+    <div class="hidden absolute right-0 bottom-full mb-2 w-56 z-50 rounded-2xl bg-[#0d1117] border border-white/10 shadow-2xl shadow-black/60 overflow-hidden">
+      <div class="px-4 py-3 border-b border-white/5">
+        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Add to Playlist</p>
+      </div>
+
+      <% if current_user.playlists.any? %>
+        <div class="max-h-48 overflow-y-auto">
+          <% current_user.playlists.each do |playlist| %>
+            <%= button_to playlist_playlist_tracks_path(playlist, track_id: track.id),
+                  method: :post,
+                  class: "w-full text-left px-4 py-2.5 text-[13px] text-slate-300 hover:bg-white/5 hover:text-white transition-all flex items-center gap-3",
+                  data: { action: "click->player#stopProp" } do %>
+              <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-music2"><circle cx="8" cy="18" r="4"/><path d="M12 18V2l7 4"/></svg>
+              </div>
+              <span class="truncate"><%= playlist.title %></span>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="px-4 py-4 text-center">
+          <p class="text-xs text-slate-600 mb-2">No playlists yet</p>
+          <%= link_to "Create one", new_playlist_path, class: "text-xs font-bold text-brand-primary hover:underline" %>
+        </div>
+      <% end %>
+
+      <div class="border-t border-white/5">
+        <%= link_to new_playlist_path, class: "flex items-center gap-3 px-4 py-3 text-[12px] font-bold text-brand-primary hover:bg-brand-primary/10 transition-all" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg> New Playlist
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,22 @@
+[project]
+name = "resonance-ml"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.135.3",
+    "uvicorn>=0.42.0",
+    "torch>=2.6.0",
+    "pandas>=2.2.3",
+    "httpx>=0.28.1",
+    "qdrant-client>=1.13.2",
+    "pydantic-settings>=2.8.0",
+    "numpy>=2.2.3",
+    "tqdm>=4.66.1",
+    "faiss-cpu>=1.13.2",
+    "sentence-transformers>=3.5.0",
+    "scikit-learn>=1.6.0",
+    "psycopg2-binary>=2.9.11",
+    "sqlalchemy>=2.0.40",
+]

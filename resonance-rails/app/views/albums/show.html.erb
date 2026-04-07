@@ -1,0 +1,65 @@
+<div class="max-w-6xl mx-auto px-8 py-12">
+  <!-- Album Hero -->
+  <div class="relative rounded-[3rem] overflow-hidden bg-bg-surface border border-white/5 mb-16 min-h-[400px] flex items-end">
+    <!-- Background Vibe (Simplified gradient for now) -->
+    <div class="absolute inset-0 z-0">
+      <img src="<%= @album.cover_url %>" class="w-full h-full object-cover blur-3xl opacity-30 scale-150">
+      <div class="absolute inset-0 bg-gradient-to-t from-bg-deep via-bg-deep/40 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 p-12 flex flex-col md:flex-row items-end gap-12 w-full">
+      <div class="w-64 h-64 rounded-3xl shadow-2xl shadow-black/50 overflow-hidden flex-shrink-0 border border-white/10 group relative">
+        <img src="<%= @album.cover_url %>" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+             onclick="document.dispatchEvent(new CustomEvent('player:playRow', { detail: { trackId: <%= @tracks.first&.id %> } }))">
+           <i data-lucide="play" class="w-16 h-16 text-white fill-current"></i>
+        </div>
+      </div>
+      
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-[10px] font-black uppercase tracking-widest"><%= @album.release_year %> ALBUM</span>
+        </div>
+        <h1 class="text-7xl font-display font-black text-white tracking-tighter mb-6"><%= @album.title %></h1>
+        <div class="flex items-center gap-4">
+           <%= link_to artist_path(@album.artist), class: "group flex items-center gap-3" do %>
+              <div class="w-8 h-8 rounded-full overflow-hidden border border-white/10">
+                 <img src="<%= @album.artist.image_url %>" class="w-full h-full object-cover">
+              </div>
+              <span class="text-sm font-bold text-white group-hover:text-brand-primary transition-colors"><%= @album.artist.name %></span>
+           <% end %>
+           <div class="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+           <span class="text-sm font-bold text-slate-500"><%= @tracks.count %> Songs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tracklist -->
+  <div class="bg-white/5 rounded-[2.5rem] border border-white/5 p-8">
+    <div class="flex flex-col gap-1">
+      <% @tracks.each_with_index do |track, i| %>
+        <div class="group flex items-center gap-6 px-6 py-4 rounded-2xl cursor-pointer hover:bg-white/[0.04] transition-all"
+             onclick="document.dispatchEvent(new CustomEvent('player:playRow', { detail: { trackId: <%= track.id %> } }))">
+          
+          <span class="text-sm font-bold text-slate-700 w-6 text-center flex-shrink-0 group-hover:hidden"><%= i + 1 %></span>
+          <div class="hidden group-hover:flex w-6 justify-center">
+            <i data-lucide="play" class="w-5 h-5 text-brand-primary fill-current"></i>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <p class="text-base font-bold text-white truncate group-hover:text-brand-primary transition-colors"><%= track.title %></p>
+            <p class="text-xs text-slate-500 truncate mt-0.5"><%= @album.artist.name %></p>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <%= render "shared/like_button", track: track %>
+            <%= render "shared/add_to_playlist", track: track %>
+            <% mins = track.duration_seconds.to_i / 60; secs = track.duration_seconds.to_i % 60 %>
+            <span class="text-sm font-medium text-slate-600 tabular-nums w-12 text-right"><%= "#{mins}:#{'%02d' % secs}" %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<%= turbo_frame_tag "recommendations" do %>
+  <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+    <div>
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-2xl font-display font-bold text-white tracking-tight">Made For You</h3>
+      </div>
+      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-primary pulse-live"></span>
+        <%= @discovery_message %>
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <% @featured_tracks.each do |track| %>
+      <div class="group p-3.5 rounded-2xl cursor-pointer transition-all duration-250 border border-white/[0.06] hover:border-brand-primary/20 hover:-translate-y-0.5"
+           style="background: rgba(255,255,255,0.04);"
+           onmouseover="this.style.background='rgba(255,255,255,0.07)'"
+           onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+        <div class="relative aspect-square mb-3 rounded-xl overflow-hidden shadow-lg">
+          <img src="<%= track.album.cover_url || "https://picsum.photos/seed/#{track.id}/600/600" %>"
+               alt="<%= track.title %>"
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          
+          <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-3">
+            <div class="flex items-center gap-4 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+              <div class="scale-90 hover:scale-110 transition-transform">
+                <%= render "shared/like_button", track: track %>
+              </div>
+              
+              <button
+                class="w-12 h-12 bg-white text-bg-deep rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200"
+                onclick="document.dispatchEvent(new CustomEvent('player:playRow', { detail: { trackId: <%= track.id %> } }))"
+              >
+                <i data-lucide="play" class="w-6 h-6 fill-current ml-0.5"></i>
+              </button>
+
+              <div class="scale-90 hover:scale-110 transition-transform">
+                <%= render "shared/add_to_playlist", track: track %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h4 class="font-bold text-[13px] text-white mb-0.5 truncate group-hover:text-brand-primary transition-colors"><%= track.title %></h4>
+        <p class="text-[11px] text-slate-500 truncate"><%= track.artist.name %></p>
+      </div>
+    <% end %>
+  </div>
+<% end %>

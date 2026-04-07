@@ -1,0 +1,138 @@
+<!-- HERO -->
+<section class="mb-10">
+  <div class="relative overflow-hidden rounded-3xl bg-bg-surface border border-white/5 flex min-h-[260px]">
+    <!-- Glows -->
+    <div class="absolute w-[400px] h-[400px] rounded-full pointer-events-none -top-24 -left-20"
+         style="background: radial-gradient(circle, rgba(0,242,255,0.08) 0%, transparent 70%)"></div>
+    <div class="absolute w-[300px] h-[300px] rounded-full pointer-events-none -bottom-16 right-48"
+         style="background: radial-gradient(circle, rgba(188,0,255,0.07) 0%, transparent 70%)"></div>
+
+    <!-- Text side -->
+    <div class="relative z-10 flex-1 p-12">
+      <div class="flex items-center gap-2 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-primary pulse-live"></span>
+        <span class="text-[10px] font-black uppercase tracking-[0.3em] text-brand-primary">AI Recommendation Engine</span>
+      </div>
+      <h2 class="font-display font-black text-white mb-4 leading-[1.05] tracking-tighter"
+          style="font-size: clamp(2rem, 4vw, 3rem)">
+        Your Sound,<br><span class="text-brand-primary">Redefined.</span>
+      </h2>
+      <p class="text-slate-500 mb-8 text-[15px] leading-relaxed max-w-sm font-medium">
+        Discover tracks that match your soul's frequency with our advanced recommendation engine.
+      </p>
+      <div class="flex gap-3">
+        <%= link_to "Start Listening", search_path, class: "btn-primary" %>
+        <%= link_to "Explore Library", library_path, class: "btn-outline" %>
+      </div>
+    </div>
+
+    <!-- Visual side — real album covers -->
+    <div class="relative w-[280px] flex-shrink-0 flex items-center justify-center p-6 overflow-hidden">
+      <div class="absolute inset-0 z-10 pointer-events-none"
+           style="background: linear-gradient(to right, #101419 0%, transparent 45%)"></div>
+      <div class="relative w-[200px] h-[200px]">
+        <% @albums.first(3).each_with_index do |album, i| %>
+          <% styles = ["top-0 right-0 w-[110px] h-[110px]", "bottom-5 right-14 w-[95px] h-[95px]", "top-8 right-20 w-[80px] h-[80px] opacity-70"] %>
+          <% rotations = ["rotate(3deg)", "rotate(-2deg)", "rotate(5deg)"] %>
+          <div class="absolute <%= styles[i] %> rounded-xl overflow-hidden border border-white/10 shadow-2xl"
+               style="transform: <%= rotations[i] %>">
+            <img src="<%= album.cover_url || "https://picsum.photos/seed/#{album.id}/300/300" %>" class="w-full h-full object-cover" alt="<%= album.title %>">
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED TRACKS (Lazy) -->
+<section class="mb-10">
+  <%= turbo_frame_tag "recommendations", src: recommendations_path do %>
+    <div class="flex items-end justify-between mb-5">
+      <div>
+        <h3 class="text-xl font-display font-bold text-white tracking-tight">Made For You</h3>
+        <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest mt-1 italic animate-pulse">Scanning your vibe...</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <% 5.times do %>
+        <div class="p-3.5 rounded-2xl border border-white/[0.04] bg-white/[0.02] animate-pulse">
+          <div class="aspect-square mb-3 rounded-xl bg-white/[0.05]"></div>
+          <div class="h-4 w-3/4 bg-white/[0.05] rounded mb-2"></div>
+          <div class="h-3 w-1/2 bg-white/[0.05] rounded"></div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</section>
+
+<!-- TRENDING NOW -->
+<section class="mb-10">
+  <div class="flex items-end justify-between mb-5">
+    <div>
+      <h3 class="text-xl font-display font-bold text-white tracking-tight">Trending Now</h3>
+      <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest mt-1">Top Tracks Today</p>
+    </div>
+    <%= link_to search_path, class: "group flex items-center gap-2 text-[10px] font-bold text-slate-500 hover:text-brand-primary transition-all uppercase tracking-widest" do %>
+      Show all <i data-lucide="arrow-right" class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i>
+    <% end %>
+  </div>
+
+  <div class="flex flex-col gap-0.5">
+    <% @recent_tracks.each_with_index do |track, i| %>
+      <div class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/[0.04] group transition-all">
+        <span class="text-[12px] font-bold text-slate-600 w-5 text-center flex-shrink-0 group-hover:hidden"><%= i + 1 %></span>
+        <div class="hidden group-hover:flex w-5 justify-center cursor-pointer"
+             onclick="document.dispatchEvent(new CustomEvent('player:playRow', { detail: { trackId: <%= track.id %>, contextType: 'trending' } }))">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play text-brand-primary"><path d="m5 3 14 9-14 9V3z"/></svg>
+        </div>
+        <div class="w-11 h-11 rounded-lg overflow-hidden flex-shrink-0 bg-white/5 border border-white/5">
+          <img src="<%= track.album.cover_url || "https://picsum.photos/seed/#{track.id}/200/200" %>"
+               class="w-full h-full object-cover" alt="<%= track.title %>">
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-[13px] font-semibold text-white truncate group-hover:text-brand-primary transition-colors"><%= track.title %></p>
+          <p class="text-[11px] text-slate-500 truncate cursor-default">
+            <%= link_to track.artist.name, artist_path(track.artist), class: "hover:text-brand-primary transition-colors", onclick: "event.stopPropagation();" %>
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-brand-primary hover:bg-brand-primary/10 transition-all opacity-0 group-hover:opacity-100"
+                  onclick="document.dispatchEvent(new CustomEvent('player:addToQueue', { detail: { trackId: <%= track.id %>, title: '<%= escape_javascript track.title %>', artist: '<%= escape_javascript track.artist.name %>', cover: '<%= track.album.cover_url %>', preview: '<%= track.preview_url %>' } }))"
+                  title="Add to Queue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-plus"><path d="M11 12H3"/><path d="M16 6H3"/><path d="M16 18H3"/><path d="M18 9v6"/><path d="M15 12h6"/></svg>
+          </button>
+          <%= render "shared/like_button", track: track %>
+          <%= render "shared/add_to_playlist", track: track %>
+          <% if track.duration_seconds %>
+            <% mins = track.duration_seconds / 60; secs = track.duration_seconds % 60 %>
+            <span class="text-[12px] text-slate-600 tabular-nums w-10 text-right"><%= "#{mins}:#{'%02d' % secs}" %></span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<!-- ARTISTS -->
+<section class="mb-10">
+  <div class="flex items-end justify-between mb-5">
+    <div>
+      <h3 class="text-xl font-display font-bold text-white tracking-tight">Artists to Watch</h3>
+      <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest mt-1">In Your Library</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-3 md:grid-cols-6 gap-6">
+    <% @artists.each do |artist| %>
+      <%= link_to artist_path(artist), class: "text-center group" do %>
+        <div class="aspect-square rounded-full overflow-hidden mb-3 border border-white/5 group-hover:border-brand-primary/30 transition-all duration-500">
+          <img src="<%= artist.image_url || "https://picsum.photos/seed/#{artist.id}a/300/300" %>"
+               class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+               alt="<%= artist.name %>">
+        </div>
+        <p class="text-[12px] font-bold text-white truncate group-hover:text-brand-primary transition-colors"><%= artist.name %></p>
+        <p class="text-[10px] text-slate-600 uppercase tracking-wider font-black mt-0.5">Artist</p>
+      <% end %>
+    <% end %>
+  </div>
+</section>

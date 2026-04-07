@@ -1,0 +1,77 @@
+<div class="max-w-2xl mx-auto px-8 py-12">
+  <div class="flex items-center gap-4 mb-10">
+    <%= link_to profile_path, class: "p-3 rounded-2xl bg-white/5 border border-white/10 text-slate-500 hover:text-white transition-all" do %>
+      <i data-lucide="arrow-left" class="w-5 h-5"></i>
+    <% end %>
+    <div>
+      <h1 class="text-3xl font-display font-black text-white tracking-tighter mb-1">Account Security</h1>
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">Update your credentials</p>
+    </div>
+  </div>
+
+  <div class="p-8 md:p-12 rounded-[3rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl relative overflow-hidden">
+    <!-- Glow effect -->
+    <div class="absolute -top-24 -left-24 w-64 h-64 bg-brand-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+    <div class="relative z-10">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-8" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div class="space-y-6">
+          <div class="grid grid-cols-1 gap-6">
+            <div class="space-y-2">
+              <%= f.label :email, class: "text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1" %>
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", 
+                  class: "w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium placeholder:text-slate-700 focus:outline-none focus:border-brand-primary/50 focus:bg-white/[0.05] transition-all" %>
+            </div>
+
+            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+              <div class="p-4 rounded-xl bg-brand-secondary/10 border border-brand-secondary/20 text-[11px] font-medium text-brand-secondary">
+                Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+              </div>
+            <% end %>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <%= f.label :password, "New Password", class: "text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1" %>
+                <%= f.password_field :password, autocomplete: "new-password", placeholder: "Leave blank to keep current",
+                    class: "w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium placeholder:text-slate-700 focus:outline-none focus:border-brand-primary/50 focus:bg-white/[0.05] transition-all" %>
+                <% if @minimum_password_length %>
+                  <p class="text-[10px] text-slate-600 ml-1 font-bold italic opacity-70"><%= @minimum_password_length %> characters minimum</p>
+                <% end %>
+              </div>
+
+              <div class="space-y-2">
+                <%= f.label :password_confirmation, "Confirm New Password", class: "text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1" %>
+                <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Repeat new password",
+                    class: "w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium placeholder:text-slate-700 focus:outline-none focus:border-brand-primary/50 focus:bg-white/[0.05] transition-all" %>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-8 mt-8 border-t border-white/5 space-y-4">
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 mb-2">
+                <%= f.label :current_password, class: "text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] ml-1" %>
+                <span class="text-[9px] font-black text-slate-600 uppercase tracking-widest">(Required to save)</span>
+              </div>
+              <%= f.password_field :current_password, autocomplete: "current-password", placeholder: "Enter current password",
+                  class: "w-full bg-brand-primary/5 border border-brand-primary/20 rounded-2xl px-6 py-4 text-white text-sm font-medium placeholder:text-brand-primary/20 focus:outline-none focus:border-brand-primary focus:bg-brand-primary/10 transition-all" %>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6">
+          <%= f.submit "Save Changes", class: "btn-primary w-full py-4 text-sm shadow-[0_20px_40px_-10px_rgba(0,242,255,0.2)]" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener('turbo:load', () => {
+    if (window.lucide) { lucide.createIcons(); }
+  });
+</script>

@@ -1,0 +1,45 @@
+<div class="max-w-2xl mx-auto px-8 py-12">
+  <div class="flex items-center gap-4 mb-12">
+    <%= link_to profile_path, class: "p-3 rounded-2xl bg-white/5 border border-white/10 text-slate-400 hover:text-white transition-all" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+    <% end %>
+    <div>
+      <h1 class="text-4xl font-display font-black text-white tracking-tighter mb-1">Edit Profile</h1>
+      <p class="text-slate-500 font-medium tracking-tight">Update your personal information</p>
+    </div>
+  </div>
+
+  <div class="p-10 rounded-[2.5rem] bg-white/[0.03] border border-white/5 backdrop-blur-3xl relative overflow-hidden">
+    <div class="absolute -top-24 -right-24 w-60 h-60 bg-brand-primary/5 blur-[100px] rounded-full"></div>
+
+    <%= form_with(model: @user, url: profile_path, method: :patch, class: "space-y-8 relative z-10") do |f| %>
+      <% if @user.errors.any? %>
+        <div class="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold mb-6">
+          <%= @user.errors.full_messages.to_sentence %>
+        </div>
+      <% end %>
+
+      <div class="space-y-6">
+        <div class="space-y-2">
+          <%= f.label :email, "Email Address", class: "text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1" %>
+          <%= f.email_field :email, class: "w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/5 transition-all", placeholder: "your@email.com" %>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-brand-primary/5 border border-brand-primary/10 flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-brand-primary/20 flex items-center justify-center flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info text-brand-primary"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </div>
+          <div>
+            <p class="text-white text-sm font-bold mb-1">Account Visibility</p>
+            <p class="text-slate-400 text-xs leading-relaxed">Your email is used for login and notifications. Changing it may require a quick verification if enabled.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 flex items-center gap-4">
+        <%= f.submit "Save Changes", class: "btn-primary py-4 px-8 text-sm" %>
+        <%= link_to "Cancel", profile_path, class: "text-xs font-bold text-slate-500 hover:text-white transition-all" %>
+      </div>
+    <% end %>
+  </div>
+</div>

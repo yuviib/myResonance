@@ -1,0 +1,34 @@
+<div>
+  <div class="min-h-[80vh] flex flex-col items-center justify-center text-center px-6">
+  <!-- Brand Badge -->
+  <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-10 pulse-live">
+    <div class="w-2 h-2 rounded-full bg-brand-primary"></div>
+    <span class="text-[10px] font-black uppercase tracking-[0.3em] text-brand-primary">The Future of Sound</span>
+  </div>
+
+  <h1 class="text-7xl md:text-8xl font-display font-black text-white mb-8 tracking-tighter leading-[0.9]">
+    Find your <br/>
+    <span class="text-brand-primary">Resonance.</span>
+  </h1>
+
+  <p class="text-slate-500 text-xl md:text-2xl max-w-2xl leading-relaxed mb-12 font-medium">
+    A high-performance music engine built for the next generation of listeners. 
+    Secure, sequence-driven discovery at your fingertips.
+  </p>
+
+  <div class="flex flex-col sm:flex-row gap-6">
+    <%= link_to new_user_registration_path, class: "btn-primary text-center min-w-[200px]" do %>
+      Get Started Free
+    <% end %>
+    <%= link_to new_user_session_path, class: "btn-outline text-center min-w-[200px]" do %>
+      Sign In
+    <% end %>
+  </div>
+
+  <!-- Decorative background mesh -->
+  <div class="absolute inset-0 z-[-1] overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-primary/5 blur-[160px] rounded-full"></div>
+    <div class="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-brand-secondary/5 blur-[120px] rounded-full"></div>
+  </div>
+</div>
+</div>

@@ -1,0 +1,36 @@
+# --- Environment & Secrets ---
+.env*
+config/master.key
+brakeman_report.json
+
+# --- Programming Ecosystems ---
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# --- Rails Ephemera ---
+/log/*
+/tmp/*
+/storage/*
+!/log/.keep
+!/tmp/.keep
+!/storage/.keep
+
+# --- Deployment (Kamal/Docker) ---
+.kamal/secrets
+
+# --- ML & Data Artifacts ---
+# We commit the mapping LOGIC, but never the local data itself.
+# We also avoid committing large FAISS index binaries.
+resonance-ml/data/*
+!resonance-ml/data/.keep
+resonance-ml/*.index
+resonance-ml/*.index_ids
+
+# --- IDE & OS ---
+.DS_Store
+.vscode/
+.idea/
+#for now
+resonance_technical_deep_dive.md 
