@@ -47,11 +47,11 @@ This repository is built to showcase a full-stack, AI-integrated approach to mod
 graph TD
     Client[Web Client / User] -->|HTTP/Turbo| Rails[Resonance Rails App]
     
-    subgraph Core Platform
+    subgraph core_platform [Core Platform]
         Rails -->|Read/Write| DB[(PostgreSQL Database)]
     end
     
-    subgraph ML Infrastructure
+    subgraph ml_infrastructure [ML Infrastructure]
         Rails -->|REST API Request| ML[Resonance ML Engine]
         ML -->|Vector Search| Qdrant[(Qdrant Vector DB)]
         ML -->|Query Data| DB
